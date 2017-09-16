@@ -7,7 +7,7 @@ package matrizdispersa;
 
 /**
  *
- * @author kellytatiana
+ * @author Juan
  */
 public class MatrizDispersa {
 
