@@ -13,6 +13,10 @@ public class Tripleta {
     private int fila,columna;
     private Object valor;
 
+    public Tripleta() {
+    }
+
+    
     public Tripleta(int fila, int columna, Object valor) {
         this.fila = fila;
         this.columna = columna;
