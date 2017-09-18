@@ -102,10 +102,325 @@ public class MatrizForma2 {
         }
     }
     
-//    public MatrizForma2 suma(MatrizForma2 b){}
-//    public MatrizForma2 multiplicar(MatrizForma2 b){}
-//    public MatrizForma2 transpuesta(){}
-//    public void puntoDeSilla(){}
+    public MatrizForma2 suma(MatrizForma2 b){
+        int ma,na,mb,nb,ss;
+        NodoDoble p,q,x;
+        Tripleta tp,tq,tx;
+        p= this.primerNodo();
+        q= b.primerNodo();
+        tp = (Tripleta) p.getDato();
+        tq = (Tripleta) q.getDato();
+        ma = tp.getFila();
+        na = tp.getColumna();
+        mb = tq.getFila();
+        nb = tq.getColumna();
+        if ((ma!=mb)||(na!=nb)) {
+            System.out.println("Matrices de diferente dimensiones no se puede sumar");
+            return null;
+        }
+        MatrizForma2 c = new MatrizForma2(ma,na);
+        p = this.primerNodo();
+        q = b.primerNodo();
+        while (!this.finDeRecorrido(p) && !b.finDeRecorrido(q)) {
+            tp = (Tripleta) p.getDato();
+            tq = (Tripleta) q.getDato();
+            switch (compare(tp.getFila(),tq.getFila())) {
+                case -1:
+                    x= new NodoDoble(tp);
+                    c.conectarPorFilas(x);
+                    c.conectarPorColumnas(x);
+                    p = p.getLd();
+                    break;
+                case 1:
+                    x = new NodoDoble(tq);
+                    c.conectarPorFilas(x);
+                    c.conectarPorColumnas(x);
+                    q = q.getLd();
+                    break;
+                case 0:
+                    switch (compare(tp.getColumna(), tq.getColumna())) {
+                        case -1:
+                            x = new NodoDoble(tp);
+                            c.conectarPorFilas(x);
+                            c.conectarPorColumnas(x);
+                            p = p.getLd();
+                            break;
+                        case 1:
+                            x = new NodoDoble(tq);
+                            c.conectarPorFilas(x);
+                            c.conectarPorColumnas(x);
+                            q = q.getLd();
+                            break;
+                        case 0:
+                            ss = (int)tp.getValor()+(int)tq.getValor();
+                            if (ss!=0) {
+                                tx = new Tripleta(tp.getFila(),tp.getColumna(),ss);
+                                x = new NodoDoble(tx);
+                                c.conectarPorFilas(x);
+                                c.conectarPorColumnas(x);
+                                
+                            }
+                            p = p.getLd();
+                            q = q.getLd();
+                            break;
+                       
+                    }
+            }
+        }
+        while (!this.finDeRecorrido(p)) {
+            tp = (Tripleta) p.getDato();
+            x = new NodoDoble(tp);
+            c.conectarPorFilas(x);
+            c.conectarPorColumnas(x);
+            p = p.getLd();
+        }
+        while (!b.finDeRecorrido(q)) {
+            tq = (Tripleta) q.getDato();
+            x = new NodoDoble(tq);
+            c.conectarPorFilas(x);
+            c.conectarPorColumnas(x);
+            q = q.getLd();
+        }
+        return c;
+    }
+    
+   public int compare(int d1, int d2){
+       if (d1<d2) {
+           return -1;
+       }
+       if (d1==d2) {
+           return 0 ;
+       }
+       return 1;
+   }
+    
+    public MatrizForma2 multiplicar(MatrizForma2 b){
+        NodoDoble p,q,x,ip;
+        Tripleta tp,tq,tx;
+        int s, filaActual, columnaActual;
+        filaActual = 0;
+        columnaActual = 0;
+        p = this.primerNodo();
+        q = b.primerNodo();
+        tp = (Tripleta) p.getDato();
+        tq = (Tripleta) q.getDato();
+        if (tp.getColumna()!= tq.getFila()) {
+            System.out.println("Matrices no se pueden multiplicar");
+            return null;
+        }
+        MatrizForma2 c = new MatrizForma2(tp.getFila(),tq.getColumna());
+        p=this.primerNodo();
+        while (!this.finDeRecorrido(p)) {
+            tp = (Tripleta) p.getDato();
+            filaActual = tp.getFila();
+            ip = p;
+            q = b.primerNodo();
+            while (!b.finDeRecorrido(q)) {
+                tq = (Tripleta) q.getDato();
+                columnaActual = tq.getColumna();
+                s = 0;
+                while (tp.getFila()==filaActual && tq.getColumna()==columnaActual) {
+                    if (tp.getColumna()<tq.getFila()) {
+                        p = p.getLd();
+                        tp = (Tripleta) p.getDato();
+                        continue;
+                    }
+                    if (tp.getColumna()>tq.getFila()) {
+                        q = q.getLi();
+                        tq = (Tripleta) q.getDato();
+                        continue;
+                    }
+                    s = s + (int)tp.getValor()*(int)tq.getValor();
+                    p=p.getLd();
+                    tp = (Tripleta) p.getDato();
+                    q = q.getLi();
+                    tq = (Tripleta) q.getDato();
+                }
+                if (s!=0) {
+                    tx = new Tripleta(filaActual,columnaActual,s);
+                    x = new NodoDoble(tx);
+                    c.conectarPorFilas(x);
+                    c.conectarPorColumnas(x);
+                }
+                while (tq.getColumna()==columnaActual) {
+                    q = q.getLi();
+                    tq = (Tripleta) q.getDato();
+                }
+                p = ip;
+                tp = (Tripleta) p.getDato();
+            }
+            while (tp.getFila()==filaActual) {
+                p = p.getLd();
+                tp = (Tripleta) p.getDato();
+            }
+        }
+        return c;
+    }
+   
+    public MatrizForma2 transpuesta(){
+        int m,n;
+        NodoDoble p,x;
+        Tripleta tp,tx;
+        p=this.primerNodo();
+        tp = (Tripleta)p.getDato();
+        MatrizForma2 a = new MatrizForma2(tp.getColumna(),tp.getFila());
+        p = this.primerNodo();
+        tp =(Tripleta)p.getDato();
+        while (!this.finDeRecorrido(p)) {
+            tx = new Tripleta(tp.getColumna(),tp.getFila(),tp.getValor());
+            x = new NodoDoble(tx);
+            a.conectarPorFilas(x);
+            a.conectarPorColumnas(x);
+            p = p.getLd();
+            tp = (Tripleta)p.getDato();
+        }
+        return a;
+    }
+    
+    public void puntoDeSilla(){
+        int k,psi,psj,numeroFilas,numeroColumnas,filaActual;
+        Tripleta tp;
+        NodoDoble p,q,vpi[];
+        p = this.primerNodo();
+        tp = (Tripleta)p.getDato();
+        numeroFilas = tp.getFila();
+        numeroColumnas = tp.getColumna();
+        vpi = new NodoDoble[numeroColumnas + 2];
+        q = this.nodoCabeza();
+        p= this.primerNodo();
+        psj=0;
+        while (p!=q) {
+            k=0;
+            tp =(Tripleta)p.getDato();
+            filaActual = tp.getFila();
+            psi = filaMenorDato(p,numeroColumnas);
+            if (psi!=0) {
+                q =vpi[psi];
+                psj = ColumnaMayorDato(q,numeroFilas);
+                if (psj==tp.getFila()) {
+                    System.out.println("El punto de siila es"+tp.getFila()+" "+psi);
+                    return;
+                }
+            }
+            while (tp.getFila()==filaActual) {
+                p =p.getLd();
+                tp = (Tripleta)p.getDato();
+            }
+        }
+        System.out.println("No hay punto de silla");
+    }
+    
+    public int filaMenorDato(NodoDoble pp, int nc){
+        int menor, j, columna, k, p, filaActual;
+        NodoDoble qq;
+        Tripleta tx;
+        menor = 10000;
+        qq = pp;
+        columna = 0;
+        j = 0;
+        tx = (Tripleta)pp.getDato();
+        filaActual = tx.getFila();
+        while (tx.getFila()==filaActual) {
+            j = j+1;
+            if ((int)tx.getValor()<menor) {
+                menor=(int)tx.getValor();
+                columna = tx.getColumna();
+            }
+            pp = pp.getLd();
+            tx = (Tripleta)pp.getDato();
+        }
+        k = 0;
+        pp = qq;
+        tx = (Tripleta)pp.getDato();
+        while (tx.getFila()==filaActual) {
+            if ((int)tx.getValor()==menor) {
+                k=k+1;
+            }
+            pp = pp.getLd();
+            tx = (Tripleta)pp.getDato();
+        }
+        switch (nc-j) {
+            case 0:
+                if (k==1) {
+                    return columna;
+                }
+            break;
+            case 1:
+                if (menor<0 && k==1) {
+                    return columna;
+                }
+                pp=qq;
+                tx = (Tripleta)pp.getDato();
+                p=1;
+                while (tx.getColumna()==p) {
+                    pp=pp.getLd();
+                    tx=(Tripleta)pp.getDato();
+                    p = p+1;
+                }
+                return p;
+            default:
+                if (menor<0 && k==1) {
+                    return columna;
+                }
+        }
+        return 0;
+    }
+    
+    public int ColumnaMayorDato(NodoDoble pp, int nc){
+        int j,mayor,fila,k,p,columnaActual;
+        NodoDoble qq;
+        Tripleta tx;
+        mayor = -1000;
+        fila = 0;
+        j =0;
+        qq = pp;
+        tx = (Tripleta)qq.getDato();
+        columnaActual = tx.getColumna();
+        while (columnaActual==tx.getColumna()) {
+            j = j+1;
+            if ((int)tx.getValor()>mayor) {
+                mayor=(int)tx.getValor();
+                fila = tx.getFila();
+            }
+            qq =qq.getLi();
+            tx = (Tripleta)qq.getDato();
+        }
+        k=0;
+        qq=pp;
+        tx=(Tripleta)qq.getDato();
+        while (columnaActual==tx.getColumna()) {
+            if ((int)tx.getValor()==mayor) {
+                k=k+1;
+            }
+            qq =qq.getLi();
+            tx = (Tripleta)qq.getDato();
+        }
+        switch (nc-j) {
+            case 0:
+                if (k==1) {
+                    return fila;
+                }
+                break;
+            case 1:
+                if (mayor>0 && k==1) {
+                    return fila;
+                }
+                qq=pp;
+                tx=(Tripleta)qq.getDato();
+                p=1;
+                while (tx.getFila()==p) {
+                    qq = qq.getLi();
+                    tx = (Tripleta)qq.getDato();
+                    p = p+1;
+                }
+                return p;
+            default:
+                if (mayor>0 && k==1) {
+                    return fila;
+                }
+        }
+        return 0;
+    }
     //essimetrica
     //construir tripletas
     //construir forma1

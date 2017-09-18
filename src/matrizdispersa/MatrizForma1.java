@@ -457,7 +457,7 @@ public class MatrizForma1 {
         return 0;
     }
     //essimetrica
-    //construir tripletas
+    //construir matriz entripletas
     //construir forma2
     //muestracomo matriz
     
