@@ -203,7 +203,6 @@ public class matrizEnTripletas {
        return 1;
    }
    
-   //public matrizEnTripletas multiplica(matrizEnTripletas b){}
   
    public matrizEnTripletas   multiplica(matrizEnTripletas  b){
         int  m, n, na, p, nb, i, j, k, filaActual, columnaActual, inicioFilaActual, suma;
@@ -385,4 +384,348 @@ public class matrizEnTripletas {
        
        return a;
    }
+   
+   //revisar los algorimo de cambio de filas y columnas
+   public void intercambiarFilas(int i, int j){
+       int mi, ni, mj, nj, p, k, ki, kj, ci, cj, vi, vj, pp, s[];
+       Tripleta t;
+       matrizEnTripletas aux;
+       if (i==j) {
+           return;
+       }
+       if (i>j) {
+           k=i;
+           i=j;
+           j=k;
+       }
+       s = contruyeVectorDeLimites();
+       mi = s[i];
+       ni = s[j+1]-s[i];
+       mj = s[i];
+       nj = s[j+1]-s[i];
+       ki = 1;
+       kj = 1;
+       while (ki <= ni && kj <= nj) {
+          ci = v[mi].getColumna();
+          cj = v[mj].getColumna();
+          vi = (int) v[mi].getValor();
+           System.out.print("");
+          vj = (int) v[mj].getValor();
+          v[mi].setColumna(cj);
+          v[mi].setValor(vj);
+          v[mj].setColumna(ci);
+          v[mj].setValor(vi);
+          ki = ki + 1;
+          kj = kj + 1;
+          mi = mi + 1;
+          mj = mj + 1;
+       }
+       if  (kj  <= nj){
+            pp=mj-1;
+            t = new Tripleta(this.getFilas(),this.getColumnas(), 0);
+            aux = new  matrizEnTripletas(t);
+            while  (kj <= nj){
+                t = new Tripleta(i, v[mj].getColumna(), v[mj].getValor());
+                aux.insertaTripleta(t);
+                kj = kj + 1;
+                mj = mj + 1;
+            }
+            mj = mj-1;
+            while  (pp >= mi){
+                v[mj] = v[pp];
+                mj=mj-1;
+                pp = pp-1;
+            }
+            for (k=1; k<=aux.retornaNumeroTripletas(); k++){
+                v[mi] = aux.getTripleta(k);
+                mi = mi + 1;
+            }
+            return;
+        }
+                    
+        if  (ki <= ni){
+            pp = mi;
+            t = new Tripleta(this.getFilas(), this.getColumnas(), 0);
+            aux = new  matrizEnTripletas(t);
+            while  (ki <= ni) {
+                t = new Tripleta(j, v[mi].getColumna(), v[mi].getValor());
+                aux.insertaTripleta(t);
+                ki = ki + 1;
+                mi = mi + 1;
+            }
+            while  (mi < mj){
+                v[pp] = v[mi];
+                mi = mi + 1;
+                pp = pp + 1;
+            }
+            for (k=1; k<=aux.retornaNumeroTripletas(); k++){
+                v[pp] = aux.getTripleta(k);
+                pp = pp + 1;
+            }
+        }
+   }
+   
+   public int[] contruyeVectorDeLimites(){
+       int k,p,n,s[];
+       Tripleta tx;
+       p = this.retornaNumeroTripletas();
+       n = this.getFilas();
+       s = new int[n+2];
+
+       for (k = 1; k <= n; k++){
+            s[k] = 0;
+        }
+        for (k=1; k<=p; k++){
+            tx = this.getTripleta(k);
+            s[tx.getFila()] = s[tx.getFila()] + 1;
+        }
+        s[n + 1] = p + 1;
+        for (k = n; k > 0; k--) {
+            s[k]=s[k+1]-s[k];
+        }
+
+       return s;
+       
+   }
+   
+   public void intercambiarColumnas(int i, int j){
+       int k, s[],n;
+       s = this.contruyeVectorDeLimites();
+       n = this.getFilas();
+       for (k = 1; k < n; k++) {
+           procesaFilaActual(s[k],s[k+1]-1,i,j);
+       }
+   }
+   
+   public void procesaFilaActual(int ifa, int tfa, int i, int j){
+       int aux, k, pi, pj;
+       Tripleta t;
+       aux = 0;
+       if (i>j) {
+           aux=i;
+           i=j;
+           j=aux;
+       }
+       k = ifa;
+       pi = 0;
+       while (k<=tfa) {
+           if (v[k].getColumna()==i) {
+               pi = k;
+               break;
+           }
+           k = k+1;
+       }
+       k = ifa;
+       pj = 0;
+       while (k<=tfa) {
+           if (v[k].getColumna()==j) {
+               pj = k;
+               break;
+           }
+           k = k+1;
+       }
+       if (pi==0 && pj==0) {
+           return;
+       }
+       if (pj == 0) {
+           k = ifa;
+           while (k<=tfa && v[k].getColumna()!=i) {
+               k=k+1;
+           }
+           t=v[k];
+           k=k+1;
+           while (k<=tfa && v[k].getColumna()<j) {
+               v[k-1]=v[k];
+               k=k+1;
+           }
+           t.setColumna(j);
+           v[k-1]=t;
+           return;
+       }
+       if (pi==0) {
+           k=tfa;
+           while (k<=ifa && v[k].getColumna()!=j) {
+               k=k-1;
+               
+           }
+           t=v[k];
+           k=k-1;
+           while (k>=ifa && v[k].getColumna()>i) {
+               v[k+1]=v[k];
+               k=k-1;
+           }
+           t.setColumna(i);
+           v[k+1]=t;
+           return;
+       }
+       aux=(int) v[pi].getValor();
+       v[pi].setValor((int)v[pj].getValor());
+       v[pj].setValor(aux);
+       
+   }
+   
+   //punto de silla
+   public void puntoDeSilla(){
+       int k, psi, psj, numeroFilas, numeroColumnas, sa[], sb[];
+       Tripleta tx;
+       matrizEnTripletas bt;
+       numeroFilas = this.getFilas();
+       numeroColumnas = this.getColumnas();
+       bt = this.traspuestaRapida();
+       sa = this.contruyeVectorDeLimites();
+       sb = bt.contruyeVectorDeLimites();
+       psi = 0;
+       k = 1;
+       while (k<=numeroFilas) {
+           psi = filaMenorDato(sa[k], sa[k+1]-1, numeroColumnas);
+           if (psi!=0) {
+               psj = bt.columnaMayorDato(sb[psi], sb[psi+1]-1, numeroFilas);
+               if (psj==k) {
+                   System.out.println("el punto de silla es"+k+" "+psi);
+                   return;
+               }
+           }
+           k = k+1;
+       }
+       System.out.println("no hay punto de silla");     
+   }
+
+public int filaMenorDato(int i, int n, int nc){
+    int menor, j , columna, k, p, ne;
+    Tripleta tx;
+    menor = 10000;
+    columna = 0;
+    ne = n-i+1;
+    for (j=i; j<=n ; j++) {
+        tx = this.getTripleta(j);
+        if ((int)tx.getValor()<menor) {
+            menor = (int)tx.getValor();
+            columna = tx.getColumna();
+        }
+    }
+    k=0;
+    for (j=i; j <= n; j++) {
+        tx = this.getTripleta(j);
+        if ((int)tx.getValor()==menor) {
+            k=k+1;
+        }
+    }
+    switch (nc-ne) {
+        case 0:
+            if (k==1) {
+                return columna;
+            }
+            break;
+        case 1:
+            if (menor<0 && k==1) {
+                return columna;
+            }
+            if (menor<0) {
+                return 0;
+            }
+            j=i;
+            tx =this.getTripleta(j);
+            p=1;
+            while (tx.getColumna()==p) {
+                j=j+1;
+                tx=this.getTripleta(j);
+                p=p+1;
+            }
+            return p;
+        default:
+            if (menor<0 && k==1) {
+                return columna;
+            }
+    }
+    return 0;
+}
+
+public int columnaMayorDato(int i, int n, int nc){
+    int j, mayor, fila, k, p, ne;
+    Tripleta tx;
+    mayor = -10000;
+    fila =0;
+    ne = n-i+1;
+    for (j = i;  j<= n; j++) {
+        tx = this.getTripleta(j);
+        if ((int)tx.getValor()>mayor) {
+            mayor = (int)tx.getValor();
+            fila = tx.getColumna();
+        }
+    }
+    k=0;
+    for (j = i;  j<=n; j++) {
+        tx = this.getTripleta(j);
+        if ((int)tx.getValor()==mayor) {
+            k=k+1;
+        }
+    }
+    switch (nc-ne) {
+        case 0:
+            if (k==1) {
+                return fila;
+            }
+            break;
+        case 1:
+            if (mayor>0 && k==1) {
+                return fila;
+            }
+            if (mayor > 0 ) {
+                return 0;
+            }
+            j=i;
+            tx = this.getTripleta(j);
+            p=1;
+            while (tx.getColumna()==p) {
+                j=j+1;
+                tx = this.getTripleta(j);
+                p = p+1;
+            }
+            return p;
+        default:
+            if (mayor>0 && k==1) {
+                return fila;
+            }
+    }
+    return 0;
+}
+
+
+   
+   //simetrica
+public boolean esSimetrica(){
+    int p, f, c,vi, n, s[],k;
+    Tripleta t;
+    s = this.contruyeVectorDeLimites();
+    p = this.retornaNumeroTripletas();
+    for (k = 1 ; k <= p/2+1; k++) {
+        f = v[k].getFila();
+        c = v[k].getColumna();
+        vi = (int)v[k].getValor();
+        t = new Tripleta(c,f,vi);
+        if (!existeTripleta(t,s[c],s[c+1])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+public boolean existeTripleta(Tripleta t, int inicio, int fin){
+    int i,f,c,vi;
+    i = inicio;
+    while (i<fin) {
+        f= t.getFila();
+        c = t.getColumna();
+        vi = (int)t.getValor();
+        if (f==v[i].getFila() && c == v[i].getColumna() && vi==(int)v[i].getValor()) {
+            return true;
+        }
+        i = i+1;
+    }
+    return false;
+}
+
+   //construir forma2
+   //construir forma1
+   
 }

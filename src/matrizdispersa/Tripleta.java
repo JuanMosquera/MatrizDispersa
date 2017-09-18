@@ -14,6 +14,7 @@ public class Tripleta {
     private Object valor;
 
     public Tripleta() {
+    
     }
 
     
