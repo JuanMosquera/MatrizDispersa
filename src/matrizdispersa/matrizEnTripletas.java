@@ -386,6 +386,7 @@ public class matrizEnTripletas {
    }
    
    //revisar los algorimo de cambio de filas y columnas
+  
    public void intercambiarFilas(int i, int j){
        int mi, ni, mj, nj, p, k, ki, kj, ci, cj, vi, vj, pp, s[];
        Tripleta t;
@@ -400,9 +401,9 @@ public class matrizEnTripletas {
        }
        s = contruyeVectorDeLimites();
        mi = s[i];
-       ni = s[j+1]-s[i];
-       mj = s[i];
-       nj = s[j+1]-s[i];
+       ni = s[i+1]-s[i];
+       mj = s[j];
+       nj = s[j+1]-s[j];
        ki = 1;
        kj = 1;
        while (ki <= ni && kj <= nj) {
@@ -464,7 +465,8 @@ public class matrizEnTripletas {
             }
         }
    }
-   
+   //devuelbe un vector que indica las posiciones
+   //en en la tripleta en la que empieza cada fila
    public int[] contruyeVectorDeLimites(){
        int k,p,n,s[];
        Tripleta tx;
@@ -492,7 +494,7 @@ public class matrizEnTripletas {
        int k, s[],n;
        s = this.contruyeVectorDeLimites();
        n = this.getFilas();
-       for (k = 1; k < n; k++) {
+       for (k = 1; k <= n; k++) {
            procesaFilaActual(s[k],s[k+1]-1,i,j);
        }
    }
@@ -558,7 +560,7 @@ public class matrizEnTripletas {
            v[k+1]=t;
            return;
        }
-       aux=(int) v[pi].getValor();
+       aux= (int) v[pi].getValor();
        v[pi].setValor((int)v[pj].getValor());
        v[pj].setValor(aux);
        
@@ -726,6 +728,43 @@ public boolean existeTripleta(Tripleta t, int inicio, int fin){
 }
 
    //construir forma2
+    public MatrizForma2 construyeMatrizForma2(){
+         int m,n,p;
+           Tripleta t;
+           MatrizForma2 a;
+           NodoDoble c;
+           m = getFilas();
+           n = getColumnas();
+           p = retornaNumeroTripletas();
+           a = new MatrizForma2(m,n);
+           
+           for (int i = 1; i <= p; i++) {
+               t = getTripleta(i);
+               c = new NodoDoble(t);
+               a.conectarPorFilas(c);
+               a.conectarPorColumnas(c);
+           }
+           return a;
+    }
+
    //construir forma1
+    public MatrizForma1 construyeMatrizForma1(){
+           int m,n,p;
+           Tripleta t;
+           MatrizForma1 a;
+           NodoDoble c;
+           m = getFilas();
+           n = getColumnas();
+           p = retornaNumeroTripletas();
+           a = new MatrizForma1(m,n);
+           a.construyeNodosCabeza();
+           for (int i = 1; i <= p; i++) {
+               t = getTripleta(i);
+               c = new NodoDoble(t);
+               a.conectarPorFilas(c);
+               a.conectarPorColumnas(c);
+           }
+           return a;
+    }
    
 }

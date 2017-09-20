@@ -102,6 +102,45 @@ public class MatrizForma2 {
         }
     }
     
+    public int getFila(){
+        Tripleta t = (Tripleta)this.primerNodo().getDato();
+        return t.getFila();
+    }
+    
+    public int getColumna(){
+         Tripleta t = (Tripleta)this.primerNodo().getDato();
+         return t.getColumna();
+    }
+    
+    public boolean esSimetrica(){
+         Tripleta t1,t2;
+         
+        if (this.getColumna()!=this.getFila()) {
+            return false;
+        }
+
+        NodoDoble nod2, nod = this.nodoCabeza().getLd();
+        nod2 = this.nodoCabeza().getLi();
+        t1= (Tripleta)nod.getDato();
+        t2 = (Tripleta)nod2.getDato();
+        
+        while (!this.finDeRecorrido(nod)) {   
+            System.out.println(t2.getValor());
+            if (t1.getColumna()!=t2.getFila()||t1.getFila()!=t2.getColumna()) {
+                return false;
+            }
+            if ((int)t1.getValor()!=(int)t2.getValor()) {
+                return false;
+            }
+            nod = nod.getLd();
+            nod2 = nod2.getLi();
+            t1= (Tripleta)nod.getDato();
+            t2 = (Tripleta)nod2.getDato();
+        }
+        return true;
+    }
+    
+    
     public MatrizForma2 suma(MatrizForma2 b){
         int ma,na,mb,nb,ss;
         NodoDoble p,q,x;
@@ -258,7 +297,7 @@ public class MatrizForma2 {
     }
    
     public MatrizForma2 transpuesta(){
-        int m,n;
+//        int m,n;
         NodoDoble p,x;
         Tripleta tp,tx;
         p=this.primerNodo();
@@ -421,9 +460,111 @@ public class MatrizForma2 {
         }
         return 0;
     }
-    //essimetrica
-    //construir tripletas
-    //construir forma1
-    //muestra como matriz
     
+    //construir 
+    public matrizEnTripletas construyeMatrizEnTripletas(){
+        matrizEnTripletas a;
+        NodoDoble p;
+       int c;
+       Tripleta tp,tx,t = new Tripleta(this.getFila(),this.getColumna(),0);
+       a = new matrizEnTripletas(t);
+       c=0;
+       
+        p = this.nodoCabeza().getLd();
+        tp =(Tripleta)p.getDato();
+       
+        while (!this.finDeRecorrido(p)) {
+            tx = new Tripleta(tp.getFila(),tp.getColumna(),tp.getValor());//intercambie filas por columnas?
+            a.insertaTripleta(tx);
+            c=c+1;
+            p = p.getLd();
+            tp =(Tripleta)p.getDato();
+        }
+
+       a.asignaNumeroTripletas(c);
+       return a;
+    }
+    
+    //construir forma1
+     public MatrizForma1 construyeMatrizForma1(){
+        
+         MatrizForma1 a;
+         NodoDoble p,x;
+         Tripleta tx, tp;
+         a = new MatrizForma1(this.getFila(),this.getColumna());
+         a.construyeNodosCabeza();
+       
+         p = this.nodoCabeza().getLd();
+         tp =(Tripleta)p.getDato();
+       
+        while (!this.finDeRecorrido(p)) {
+            tx = new Tripleta(tp.getFila(),tp.getColumna(),tp.getValor());
+            x=new NodoDoble(tx);
+            a.conectarPorFilas(x);
+            a.conectarPorColumnas(x);
+            p = p.getLd();
+            tp =(Tripleta)p.getDato();
+        }
+
+       return a;
+    }
+    //muestra como matriz
+    //intercambiar filas y columnas
+     public MatrizForma2 cambiarFilas(int m, int n){
+        
+         MatrizForma2 a;
+         NodoDoble p,x;
+         Tripleta tx, tp;
+         a = new MatrizForma2(this.getFila(),this.getColumna());
+       
+         p = this.nodoCabeza().getLd();
+         tp =(Tripleta)p.getDato();
+       
+        while (!this.finDeRecorrido(p)) {
+            if (tp.getFila()==m) {
+                tx = new Tripleta(n,tp.getColumna(),tp.getValor());
+            } else if (tp.getColumna()==n) {
+                tx = new Tripleta(m,tp.getColumna(),tp.getValor());
+            } else {
+                tx = new Tripleta(tp.getFila(),tp.getColumna(),tp.getValor());
+            }
+            
+            x=new NodoDoble(tx);
+            a.conectarPorFilas(x);
+            a.conectarPorColumnas(x);
+            p = p.getLd();
+            tp =(Tripleta)p.getDato();
+        }
+
+       return a;
+    }
+     
+     public MatrizForma2 cambiarColumnas(int m, int n){
+        
+         MatrizForma2 a;
+         NodoDoble p,x;
+         Tripleta tx, tp;
+         a = new MatrizForma2(this.getFila(),this.getColumna());
+         
+       
+         p = this.nodoCabeza().getLi();
+         tp =(Tripleta)p.getDato();
+       
+        while (!this.finDeRecorrido(p)) {
+            if (tp.getColumna()==m) {
+                tx = new Tripleta(tp.getFila(),n,tp.getValor());
+            } else if (tp.getColumna()==n) {
+                tx = new Tripleta(tp.getFila(),m,tp.getValor());
+            } else {
+                tx = new Tripleta(tp.getFila(),tp.getColumna(),tp.getValor());
+            }
+            x=new NodoDoble(tx);
+            a.conectarPorFilas(x);
+            a.conectarPorColumnas(x);
+            p = p.getLi();
+            tp =(Tripleta)p.getDato();
+        }
+
+       return a;
+    }
 }
