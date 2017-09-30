@@ -158,8 +158,8 @@ public class MatrizForma2 {
             return null;
         }
         MatrizForma2 c = new MatrizForma2(ma,na);
-        p = this.primerNodo();
-        q = b.primerNodo();
+        p = this.nodoCabeza().getLd();
+        q = b.nodoCabeza().getLd();
         while (!this.finDeRecorrido(p) && !b.finDeRecorrido(q)) {
             tp = (Tripleta) p.getDato();
             tq = (Tripleta) q.getDato();
@@ -248,12 +248,12 @@ public class MatrizForma2 {
             return null;
         }
         MatrizForma2 c = new MatrizForma2(tp.getFila(),tq.getColumna());
-        p=this.primerNodo();
+        p=this.nodoCabeza().getLd();
         while (!this.finDeRecorrido(p)) {
             tp = (Tripleta) p.getDato();
             filaActual = tp.getFila();
             ip = p;
-            q = b.primerNodo();
+            q = b.nodoCabeza().getLd();
             while (!b.finDeRecorrido(q)) {
                 tq = (Tripleta) q.getDato();
                 columnaActual = tq.getColumna();
@@ -318,21 +318,30 @@ public class MatrizForma2 {
     
     public void puntoDeSilla(){
         int k,psi,psj,numeroFilas,numeroColumnas,filaActual;
-        Tripleta tp;
+        Tripleta tp,ti;
         NodoDoble p,q,vpi[];
         p = this.primerNodo();
         tp = (Tripleta)p.getDato();
         numeroFilas = tp.getFila();
         numeroColumnas = tp.getColumna();
         vpi = new NodoDoble[numeroColumnas + 2];
-        q = this.nodoCabeza();
-        p= this.primerNodo();
+        q = this.nodoCabeza().getLd();
+        
+        ti=(Tripleta) q.getDato();
+        while (ti.getColumna()!=numeroColumnas) {
+            ti=(Tripleta) q.getDato();
+            vpi[ti.getColumna()]=q;
+            q=q.getLd();
+        }
+        
+        p= this.nodoCabeza().getLd();
         psj=0;
         while (p!=q) {
             k=0;
             tp =(Tripleta)p.getDato();
             filaActual = tp.getFila();
             psi = filaMenorDato(p,numeroColumnas);
+            System.out.println("menor fila"+psi);
             if (psi!=0) {
                 q =vpi[psi];
                 psj = ColumnaMayorDato(q,numeroFilas);

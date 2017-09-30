@@ -38,11 +38,14 @@ public class MatrizDispersa {
 //        tri = new Tripleta(5,5,7);
 //        matri.insertaTripleta(tri);
 //        matri.mostrarComoMatriz();
+//        System.out.println("este es el que importa");
+//        matri.interColumna(1, 2);
+//        matri.mostrarComoMatriz();
 //        int s[]= matri.contruyeVectorDeLimites();
 //        for (int i = 0; i < s.length; i++) {
 //            System.out.println(s[i]);
 //        }
-//        matri.intercambiarColumnas(1, 2);
+//        matri.intercambiarFilas(1, 2);
 //        System.out.println("");
 //        matri.mostrarComoMatriz();
 //        System.out.println(" ");
@@ -123,9 +126,13 @@ public class MatrizDispersa {
 //        x = new NodoDoble(tr);
 //        ma.conectarPorFilas(x);
 //        ma.conectarPorColumnas(x);
+//        tr = new Tripleta(3,2,9);
+//        x = new NodoDoble(tr);
+//        ma.conectarPorFilas(x);
+//        ma.conectarPorColumnas(x);
 //        ma.muestraMatriz();
-//        
-//        System.out.println(" ");
+////        
+//        System.out.println("es simetrica "+ma.esSimetrica());
 //        ma=ma.intercambiarColumnas(1, 3);
 //        ma.muestraMatriz();
 //        
@@ -158,12 +165,12 @@ public class MatrizDispersa {
 //        result = ma.transpuesta();
 //        result.muestraMatriz();
         
-        MatrizForma2 a2 = new MatrizForma2(3,3);
-        Tripleta t2 = new Tripleta(1,1,1);
+        MatrizForma2 aux, a2 = new MatrizForma2(3,3);
+        Tripleta t2 = new Tripleta(1,1,4);
         NodoDoble x2 = new NodoDoble(t2);
         a2.conectarPorFilas(x2);
         a2.conectarPorColumnas(x2);
-        t2 = new Tripleta(1,2,2);
+        t2 = new Tripleta(1,2,5);
         x2 = new NodoDoble(t2);
         a2.conectarPorFilas(x2);
         a2.conectarPorColumnas(x2);
@@ -180,11 +187,11 @@ public class MatrizDispersa {
         a2.conectarPorFilas(x2);
         a2.conectarPorColumnas(x2);
         
-        t2 = new Tripleta(2,3,3);
+        t2 = new Tripleta(2,3,2);
         x2 = new NodoDoble(t2);
         a2.conectarPorFilas(x2);
         a2.conectarPorColumnas(x2);
-        t2 = new Tripleta(3,3,3);
+        t2 = new Tripleta(3,3,1);
         x2 = new NodoDoble(t2);
         a2.conectarPorFilas(x2);
         a2.conectarPorColumnas(x2);
@@ -198,9 +205,14 @@ public class MatrizDispersa {
         a2.conectarPorColumnas(x2);
 //        
         a2.muestraMatriz();
-        System.out.println(" ");
-        a2=a2.cambiarColumnas(1, 2);
-        a2.muestraMatriz();
+        a2.puntoDeSilla();
+//        System.out.println("es simetrica"+);
+//        a2=a2.cambiarColumnas(2, 3);
+        aux=a2;
+        aux.muestraMatriz();
+        aux=aux.multiplicar(a2);
+        System.out.println("esta es la suma");
+        aux.muestraMatriz();
 ////        a2.transpuesta();
 //        System.out.println(a2.esSimetrica());
 //        System.out.println("dale");

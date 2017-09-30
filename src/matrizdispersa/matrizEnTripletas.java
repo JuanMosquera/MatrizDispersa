@@ -402,8 +402,11 @@ public class matrizEnTripletas {
        s = contruyeVectorDeLimites();
        mi = s[i];
        ni = s[i+1]-s[i];
+       
        mj = s[j];
        nj = s[j+1]-s[j];
+       //en las lineas anteriores ubico la posicion fila y columna del primer dato 
+       //de la primera fila y la segunda fila a cambiar
        ki = 1;
        kj = 1;
        while (ki <= ni && kj <= nj) {
@@ -484,6 +487,8 @@ public class matrizEnTripletas {
         s[n + 1] = p + 1;
         for (k = n; k > 0; k--) {
             s[k]=s[k+1]-s[k];
+            
+            
         }
 
        return s;
@@ -765,6 +770,47 @@ public boolean existeTripleta(Tripleta t, int inicio, int fin){
                a.conectarPorColumnas(c);
            }
            return a;
+           
+    
+           
     }
+
+    public void interColumna(int m, int n){
+               
+               Tripleta v2[],tx,t=v[0];
+               int p,nc,nf,nv,i=1, tamaño = this.retornaNumeroTripletas();
+             
+                nf = this.getFilas();
+                nc = this.getColumnas();
+                p =(nf*nc)+2;
+                v2 = new Tripleta[p];
+                v2[0] = t;
+                for ( i = 1; i < p; i++) {
+                    v2[i] = null;
+                }
+               
+               i=1;
+               while (i<=tamaño) {
+                   t=v[i];
+                   nf=t.getFila();
+                   nc=t.getColumna();
+                   nv=(int) t.getValor();
+                   if (m==nc) {
+                       tx=new Tripleta(nf,n,nv);
+                       v2[i]=tx;
+                   } else if (n==nc) {
+                       tx=new Tripleta(nf,m,nv);
+                       v2[i]=tx;
+                   } else {
+                       tx=new Tripleta(nf,nc,nv);
+                       v2[i]=tx;
+                   }
+                   i=i+1;
+               }
+               v=v2;
+       }
+
    
+
+
 }
