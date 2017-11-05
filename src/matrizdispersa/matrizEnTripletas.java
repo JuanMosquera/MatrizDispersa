@@ -751,7 +751,17 @@ public boolean existeTripleta(Tripleta t, int inicio, int fin){
            }
            return a;
     }
-
+    
+//    public MatrizForma2 crear(){
+//        MatrizForma2 a;
+//        a = new MatrizForma2(m,n);
+//        Tripleta t = new Tripleta(fila,columna,valor);
+//        NodoDoble n= new NodoDoble(t);
+//        a.conectarPorFilas(n);
+//        a.conectarPorColumnas(n);
+//    }
+    
+    
    //construir forma1
     public MatrizForma1 construyeMatrizForma1(){
            int m,n,p;
